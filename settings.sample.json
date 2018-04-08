@@ -9,5 +9,5 @@
     "client_id": "PLACE YOUR DISCORD BOT CLIENT ID HERE",
     "youtube_developer_key": "PLACE YOUR GOOGLE API DEVELOPER KEY HERE"
   },
-  "cogs": ["cogs.greet", "cogs.youtube"]
+  "cogs": ["cogs.meta", "cogs.botadmin", "cogs.greet", "cogs.youtube"]
 }

@@ -126,7 +126,6 @@ class DiscordBot(commands.Bot):
 	def load_cogs(self, cogs = None):
 		if cogs is None:
 			cogs = self.config.get("cogs", [])
-		cogs.extend(['discordbot.cogs.meta', 'discordbot.cogs.botadmin'])
 		for extension in cogs:
 			print("Loading: " + extension)
 			try:
