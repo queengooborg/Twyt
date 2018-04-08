@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "owner": "106182485913690112",
+    "prefix": "twyt.",
+    "description": "A bot to announce Twitch and YouTube uploads/livestreams."
+  },
+  "credentials": {
+    "token": "PLACE YOUR DISCORD BOT TOKEN HERE",
+    "client_id": "PLACE YOUR DISCORD BOT CLIENT ID HERE",
+    "youtube_developer_key": "PLACE YOUR GOOGLE API DEVELOPER KEY HERE"
+  },
+  "cogs": ["cogs.greet", "cogs.youtube"]
+}
