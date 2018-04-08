@@ -1,3 +1,5 @@
+# -*- encoding: utf8 -*-
+
 # Sample Python code for user authorization
 
 import os

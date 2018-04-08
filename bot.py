@@ -1,3 +1,5 @@
+# -*- encoding: utf8 -*-
+
 import logging
 import os
 import sys

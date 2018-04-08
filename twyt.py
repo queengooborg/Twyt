@@ -1,3 +1,5 @@
+# -*- encoding: utf8 -*-
+
 from bot import DiscordBot
 import asyncio
 
