@@ -40,9 +40,23 @@ Note: your API keys are what associates your bot to it's own login information, 
 4. Set the description of the bot as desired.
 5. Add any other cogs that you may wish to utilize in package name syntax.  Example: a cog in `cogs/myname/foo.py` will be typed as `cogs.myname.foo`.
 
-## Obtaining your Discord User ID
+### Obtaining your Discord User ID
 
 1. Open the Discord application and navigate to **Settings > Appearance**.
 2. Scroll down to **Advanced** and toggle the switch that reads **Developer Mode**.  If it's already enabled, then you're all set.
 3. Back out of your settings and head to a chat where you've sent messages.
 4. Right-click on your name and choose **Copy ID** on the context menu that appears.  Congrats, you now have your own user ID.
+
+## FAQ
+
+### Why does Twyt have it's name?
+
+This is a bot designed to watch TWitch and YouTube.  Mind the capitals in those two services' names.
+
+### But wait, so the bot's name is changing when you add more services?
+
+Nah.  Twyt is short and simple, and changing it would just be more of a hassle than anything.  It's best to just leave it as it is, right?  :P
+
+## Questions
+
+If you have any questions, feel free to reach me right here on GitHub.  You can also find me on Discord (duh) at "Vinyl Darkscratch#0640", or on my [studio's Discord server](https://discord.gg/45EQCKS).  More contact methods can be found on [my website](http://www.queengoob.org).
