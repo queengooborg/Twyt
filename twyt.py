@@ -1,4 +1,4 @@
-from discordbot import DiscordBot
+from bot import DiscordBot
 import asyncio
 
 bot = DiscordBot()
