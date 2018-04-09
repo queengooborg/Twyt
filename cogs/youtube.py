@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from discord.ext import commands
 
 from bot_utils import config, checks

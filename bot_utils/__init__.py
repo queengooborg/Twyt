@@ -1,3 +1,3 @@
-# -*- encoding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 from . import checks, config, formats, paginator
