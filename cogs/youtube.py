@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import asyncio
+
 from discord.ext import commands
 
 from discordbot.bot_utils import config, checks
@@ -40,7 +42,8 @@ class YouTube:
 	async def latest(self, ctx):
 		"""Obtains the latest DubstepHorror release."""
 
-		items = self.video_list(self.channel_id)
+		loop = asyncio.get_event_loop()
+		items = await loop.run_in_executor(None, self.video_list, self.channel_id)
 		latest = items[0]['snippet']
 		await self.bot.send_message(ctx.message.channel, 'The most recent upload is {title}, published on {date}.  {url}'.format(
 			title = latest['title'],
