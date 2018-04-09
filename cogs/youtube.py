@@ -40,10 +40,11 @@ class YouTube:
 
 		items = self.video_list(self.channel_id)
 		latest = items[0]['snippet']
-		await self.bot.send_message(ctx.message.channel, 'The most recent upload is %s, published on %s.  https://youtu.be/%s' %
-			(latest['title'],
-			latest['publishedAt'],
-			latest['resourceId']['videoId']))
+		await self.bot.send_message(ctx.message.channel, 'The most recent upload is {title}, published on {date}.  {url}'.format(
+			title = latest['title'],
+			date = latest['publishedAt'],
+			url = "https://youtu.be/" + latest['resourceId']['videoId'])
+		)
 
 def setup(bot):
 	bot.add_cog(YouTube(bot))

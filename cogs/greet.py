@@ -19,7 +19,7 @@ class Greet:
 		help is called on the command itself as opposed to the
 		normal short help which shows up in the main help.
 		"""
-		await self.bot.send_message(ctx.message.channel, "Hi there, {0}, how are you?".format(ctx.message.author.mention))
+		await self.bot.send_message(ctx.message.channel, "Hi there, {user}, how are you?".format(user=ctx.message.author.mention))
 
 def setup(bot):
 	bot.add_cog(Greet(bot))

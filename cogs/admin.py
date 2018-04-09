@@ -79,7 +79,7 @@ class Admin:
 			spammers = Counter(m.author.display_name for m in deleted)
 
 		deleted = sum(spammers.values())
-		messages = ['%s %s removed.' % (deleted, 'message was' if deleted == 1 else 'messages were')]
+		messages = ['{count} {m} removed.'.format(count=deleted, m = 'message was' if deleted == 1 else 'messages were')]
 		if deleted:
 			messages.append('')
 			spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
@@ -141,7 +141,7 @@ class Admin:
 			spammers = Counter(m.author.display_name for m in deleted)
 
 		deleted = sum(spammers.values())
-		messages = ['%s %s removed.' % (deleted, 'message was' if deleted == 1 else 'messages were')]
+		messages = ['{count} {m} removed.'.format(count=deleted, m = 'message was' if deleted == 1 else 'messages were')]
 		if deleted:
 			messages.append('')
 			spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
