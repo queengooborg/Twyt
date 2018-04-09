@@ -188,7 +188,10 @@ class BotAdmin:
 		try:
 			entries.remove(command)
 		except KeyError:
-			await self.bot.responses.failure(message='The command does not exist or is not disabled.')
+			if command not in self.bot.commands:
+				await self.bot.responses.failure(message='The command does not exist.')
+			else:
+				await self.bot.responses.failure(message='The command is not disabled.')
 		else:
 			cmds[guild_id] = entries
 			await self.config.put('commands', cmds)
