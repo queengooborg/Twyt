@@ -4,7 +4,7 @@
 from discordbot import DiscordBot
 import asyncio
 
-bot = DiscordBot()
+bot = DiscordBot(pm_help=True)
 
 bot.load_cogs()
 bot.run()
