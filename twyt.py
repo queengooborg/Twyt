@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from bot import DiscordBot
+from discordbot import DiscordBot
 import asyncio
 
 bot = DiscordBot()
 
 bot.load_cogs()
-
 bot.run()

@@ -2,8 +2,8 @@
 
 from discord.ext import commands
 
-from bot_utils import config, checks
-from bot_utils.paginator import Pages
+from discordbot.bot_utils import config, checks
+from discordbot.bot_utils.paginator import Pages
 
 class Greet:
 	"""Greets the user."""
