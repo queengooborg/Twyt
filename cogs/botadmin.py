@@ -363,7 +363,7 @@ class BotAdmin:
 	# 	if deleted:
 	# 		messages.append('')
 	# 		spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
-	# 		messages.extend(map(lambda t: '**%s**: %d' %(t[0], t[1]), spammers))
+	# 		messages.extend(map(lambda t: '**{name}**: {count}'.format(name=t[0], count=t[1]), spammers))
 
 	# 	msg = await self.bot.responses.basic(title="Removed Messages:", message='\n'.join(messages))
 	# 	await asyncio.sleep(10)
