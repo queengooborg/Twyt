@@ -3,7 +3,7 @@
 import discord.utils
 from discord.ext import commands
 
-import config
+from . import config
 
 settings = config.Config('settings.json', directory="")
 meta = settings.get('meta', {})
