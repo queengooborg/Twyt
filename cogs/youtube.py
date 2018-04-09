@@ -39,14 +39,11 @@ class YouTube:
 		"""Obtains the latest DubstepHorror release."""
 
 		items = self.video_list(self.channel_id)
-		await self.bot.send_message(ctx.message.channel, 'The most recent upload is %s, published on %s.' %
-			(items[0]['snippet']['title'],
-			items[0]['snippet']['publishedAt']))
-
-	# @commands.command(pass_context=True)
-	# async def greet(ctx):
-	# 	"""Greets the user."""
-	# 	await self.bot.send_message(ctx.message.channel, "Hi there, {0}, how are you?".format(ctx.message.author.mention))
+		latest = items[0]['snippet']
+		await self.bot.send_message(ctx.message.channel, 'The most recent upload is %s, published on %s.  https://youtu.be/%s' %
+			(latest['title'],
+			latest['publishedAt'],
+			latest['resourceId']['videoId']))
 
 def setup(bot):
 	bot.add_cog(YouTube(bot))
