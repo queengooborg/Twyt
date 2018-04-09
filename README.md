@@ -7,7 +7,8 @@ A bot to announce Twitch and YouTube uploads/livestreams.
 - Pip
 
 ```
-python3 -m pip install discord.py discordbot.py
+python3 -m pip install discord.py
+python3 -m pip install discordbot.py
 python3 -m pip install --upgrade google-api-python-client
 python3 -m pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2
 ```
@@ -56,6 +57,10 @@ This is a bot designed to watch TWitch and YouTube.  Mind the capitals in those 
 ### But wait, so the bot's name is changing when you add more services?
 
 Nah.  Twyt is short and simple, and changing it would just be more of a hassle than anything.  It's best to just leave it as it is, right?  :P
+
+### Wait, why are we installing discordbot.py through Pip if you've copied all of it's files?
+
+Because eventually, the modifications to the existing library will no longer be needed as they'll be pulled into master, plus there are possible dependencies that I would like to have imported.  I'd rather be on the safe side and have you install the package ahead of time.
 
 ## Questions
 
