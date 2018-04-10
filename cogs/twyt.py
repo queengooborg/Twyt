@@ -10,24 +10,20 @@ from discordbot.bot_utils.paginator import Pages
 from apiclient.discovery import build as build_yt
 from apiclient.errors import HttpError
 
-class YouTube:
-	"""All YouTube-based commands."""
+SLEEP_MINUTES = 0.25
 
-	def __init__(self, bot):
-		self.bot = bot
+class YouTubeItem:
+	def __init__(self, channel_id, youtube):
+		self.channel_id = channel_id
+		self.playlist_id = '' #wait for youtube
+		self.latest = None
 
-		DEVELOPER_KEY = self.bot.config.get('credentials', {}).get('youtube_developer_key')
-		YOUTUBE_API_SERVICE_NAME = "youtube"
-		YOUTUBE_API_VERSION = "v3"
+		self.youtube = youtube
 
-		self.youtube = build_yt(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
-
-		self.channel_id = "UCme0nLOCBquY0OxIGvtnREQ"
-
-	def video_list(self, channelid):
+	def video_list(self):
 		channel = self.youtube.channels().list(
 			part='contentDetails',
-			id=channelid
+			id=self.channel_id
 		).execute()
 
 		playlist = self.youtube.playlistItems().list(
@@ -38,13 +34,32 @@ class YouTube:
 
 		return playlist['items']
 
+	async def check_latest(self):
+		loop = asyncio.get_event_loop()
+		items = await loop.run_in_executor(None, self.video_list)
+		return items[0]['snippet']
+
+class Twyt:
+	"""All YouTube and Twitch based commands."""
+
+	def __init__(self, bot):
+		self.bot = bot
+
+		self.youtube = build_yt("youtube", "v3", developerKey=self.bot.config.get('credentials', {}).get('youtube_developer_key'))
+
+		self.checklist = [YouTubeItem("UCme0nLOCBquY0OxIGvtnREQ", self.youtube)]
+
+	async def on_ready(self):
+		while True:
+			await asyncio.sleep(SLEEP_MINUTES*60)
+			for item in self.checklist:
+				await item.check_latest()
+
 	@commands.command(pass_context=True)
 	async def latest(self, ctx):
 		"""Obtains the latest DubstepHorror release."""
 
-		loop = asyncio.get_event_loop()
-		items = await loop.run_in_executor(None, self.video_list, self.channel_id)
-		latest = items[0]['snippet']
+		latest = await self.checklist[0].check_latest()
 		await self.bot.send_message(ctx.message.channel, 'The most recent upload is {title}, published on {date}.  {url}'.format(
 			title = latest['title'],
 			date = latest['publishedAt'],
@@ -52,4 +67,4 @@ class YouTube:
 		)
 
 def setup(bot):
-	bot.add_cog(YouTube(bot))
+	bot.add_cog(Twyt(bot))
