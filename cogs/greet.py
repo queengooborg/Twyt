@@ -12,7 +12,7 @@ class Greet:
 		self.bot = bot
 
 	@commands.command(pass_context=True)
-	async def greet(ctx):
+	async def greet(self, ctx):
 		"""Greets the user.
 
 		This is additional help text that will only show up if
