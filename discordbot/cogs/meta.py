@@ -321,7 +321,7 @@ class Meta:
 			}
 
 			async with self.session.post(CARBONITEX_API, data=carbon_payload) as resp:
-				self.bot.logs['info'].info(f'Carbon statistics returned {resp.status} for {carbon_payload}')
+				self.bot.logs['info'].info('Carbon statistics returned {resp.status} for {data}'.format(resp = resp, data = carbon_payload))
 
 		payload = json.dumps({
 			'server_count': guild_count
@@ -333,9 +333,9 @@ class Meta:
 				'content-type': 'application/json'
 			}
 
-			url = f'{DISCORDBOTS_PW}/bots/{self.bot.user.id}/stats'
+			url = '{discord_pw}/bots/{botuser}/stats'.format(discord_pw = {DISCORDBOTS_PW}, botuser = self.bot.user.id)
 			async with self.session.post(url, data=payload, headers=headers) as resp:
-				self.bot.logs['info'].info(f'discordbots.pw statistics returned {resp.status} for {payload}')
+				self.bot.logs['info'].info('discordbots.pw statistics returned {resp.status} for {payload}'.format(resp = resp, payload = payload))
 
 		if discordbots_org_key:
 			headers = {
@@ -345,7 +345,7 @@ class Meta:
 
 			url = f'{DISCORDBOTS_ORG}/bots/{self.bot.user.id}/stats'
 			async with self.session.post(url, data=payload, headers=headers) as resp:
-				self.bot.logs['info'].info(f'discordbots.pw statistics returned {resp.status} for {payload}')
+				self.bot.logs['info'].info('discordbots.pw statistics returned {resp.status} for {payload}'.format(resp = resp, payload = payload))
 
 
 def setup(bot):
