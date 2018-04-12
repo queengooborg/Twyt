@@ -7,19 +7,27 @@ from discord.ext import commands
 from discordbot.bot_utils import config, checks
 from discordbot.bot_utils.paginator import Pages
 
+import os
+import pickle
+
 from apiclient.discovery import build as build_yt
 from apiclient.errors import HttpError
 
+import opengraph
+
 SAVE_FILE = "./data/twyt.pickle"
 
-SLEEP_MINUTES = 0.25
+SLEEP_MINUTES = 5
 
 class YouTubeItem:
-	def __init__(self, channel_id, youtube):
+	def __init__(self, channel_id, youtube, discord_channel = None):
 		self.channel_id = channel_id
 		self.playlist_id = '' #wait for youtube
 		self.latest = None
 		self.discord_channels = []
+
+		if discord_channel:
+			self.discord_channels.append(discord_channel)
 
 		self.youtube = youtube
 
@@ -68,7 +76,8 @@ class Twyt:
 
 		self.checklist = []
 		# self._load()
-		self.checklist.append(YouTubeItem("UCme0nLOCBquY0OxIGvtnREQ", self.youtube))
+		# self.checklist.append(YouTubeItem("UCme0nLOCBquY0OxIGvtnREQ", self.youtube))
+		# self._save()
 
 	async def on_ready(self):
 		while True:
@@ -89,14 +98,41 @@ class Twyt:
 			pass
 
 	@commands.command(pass_context=True)
-	async def latest(self, ctx):
-		"""Obtains the latest DubstepHorror release."""
+	@checks.mod_or_permissions(manage_webhooks=True)
+	async def watch(self, ctx, url : str):
+		"""Add a YouTube/Twitch channel to watch for new uploads.
 
-		self.checklist[0].discord_channels.append(DiscordChannel(self.bot, ctx.message.channel))
+		XXX Only works with YouTube channels right now.
+		XXX Does not have file saving working, so it's only in RAM right now.
+		XXX Doesn't allow you to change the Discord channel.
+		XXX Can only add, not remove."""
+		if not url:
+			await self.bot.responses.failure(title="No URL Specified", message="You need to give me a URL!")
+			return
 
-		latest = await self.checklist[0].check_latest()
-		for channel in self.checklist[0].discord_channels:
-			await channel.send_message(latest)
+		og = opengraph.OpenGraph(url=url)
+		channel_url = og.get('url', '')
+		if channel_url.startswith("https://www.youtube.com/channel/"):
+			self.checklist.append(YouTubeItem(channel_url.replace("https://www.youtube.com/channel/", ""), self.youtube, DiscordChannel(self.bot, ctx.message.channel, "@everyone New upload!  %(url)s")))
+			await self.bot.responses.basic(message="This YouTube channel has been added!")
+		elif False:
+			pass
+		else:
+			await self.bot.responses.failure(title="Not a YouTube/Tiwtch Channel", message="The URL you have given me is not a YouTube/Twitch channel!")
+			return
+
+		# self._save()
+
+
+	# @commands.command(pass_context=True)
+	# async def latest(self, ctx):
+	# 	"""Obtains the latest DubstepHorror release."""
+
+	# 	self.checklist[0].discord_channels.append(DiscordChannel(self.bot, ctx.message.channel))
+
+	# 	latest = await self.checklist[0].check_latest()
+	# 	for channel in self.checklist[0].discord_channels:
+	# 		await channel.send_message(latest)
 		
 
 def setup(bot):

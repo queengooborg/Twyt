@@ -9,6 +9,7 @@ A bot to announce Twitch and YouTube uploads/livestreams.
 ```
 python3 -m pip install discord.py
 python3 -m pip install discordbot.py
+python3 -m pip install opengraph
 python3 -m pip install --upgrade google-api-python-client
 python3 -m pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2
 ```
