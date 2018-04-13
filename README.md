@@ -1,5 +1,12 @@
 # Twyt
-A bot to announce Twitch and YouTube uploads/livestreams.
+
+## What is Twyt?
+
+Twyt is a Discord bot designed to announce Twitch and YouTube uploads/livestreams.  Simply add the bot to your server, run `twyt.watch [Channel URL]` in the channel you'd like to post the announcements to, and let the bot do its work.
+
+## Add Twyt to Your Server
+
+Click [here](http://www.queengoob.org/twyt/add) to add Twyt to your own server.
 
 ## Prerequisites
 
@@ -57,7 +64,15 @@ This is a bot designed to watch TWitch and YouTube.  Mind the capitals in those 
 
 ### But wait, so the bot's name is changing when you add more services?
 
-Nah.  Twyt is short and simple, and changing it would just be more of a hassle than anything.  It's best to just leave it as it is, right?  :P
+Nah.  Twyt is short and simple, and changing it would just be more of a hassle than anything.  It's best to just leave it as it is, right?  😛
+
+### Can I request features to be added?
+
+Sure thing.  I can't guarantee that I will (be able to) do them, but you can [submit an issue on GitHub](https://github.com/vinyldarkscratch/Twyt/issues/new?title=Feature%20Request:%20) and start the title with "Feature Request: ".
+
+### Can I use your code in my own bot?
+
+I don't mind, as long as you follow the terms of the GNU GPLv3 license.  To summarize: your code must be open source and published under the same license, and you must document all changes (git commits suffice).  Please consider submitting PRs of your changes to help improve Twyt!
 
 ### Wait, why are we installing discordbot.py through Pip if you've copied all of it's files?
 
