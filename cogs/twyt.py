@@ -129,9 +129,7 @@ class Twyt:
 		"""Add a YouTube/Twitch channel to watch for new uploads.
 
 		XXX Only works with YouTube channels right now.
-		XXX Does not have file saving working, so it's only in RAM right now.
-		XXX Doesn't allow you to change the Discord channel.
-		XXX Can only add, not remove."""
+		XXX Doesn't allow you to change the Discord channel."""
 
 		if not url:
 			await self.bot.responses.failure(title="No URL Specified", message="You need to give me a URL!")
@@ -151,6 +149,44 @@ class Twyt:
 		self._save()
 
 	@commands.command(pass_context=True)
+	@checks.mod_or_permissions(manage_webhooks=True)
+	async def unwatch(self, ctx, url : str):
+		"""Remove a YouTube/Twitch channel from the watch queue.
+
+		XXX Only works with YouTube channels right now."""
+
+		if not url:
+			await self.bot.responses.failure(title="No URL Specified", message="You need to give me a URL!")
+			return
+
+		found = False
+
+		og = opengraph.OpenGraph(url=url)
+		channel_url = og.get('url', '')
+		if channel_url.startswith("https://www.youtube.com/channel/"):
+			channel_id = channel_url.replace("https://www.youtube.com/channel/", "")
+
+			for i in range(len(self.checklist)):
+				if self.checklist[i].channel_id == channel_id:
+					for j in range(len(self.checklist[i].discord_channels)):
+						if self.checklist[i].discord_channels[j].channel == ctx.message.channel.id:
+							self.checklist[i].discord_channels.pop(j)
+							found = True
+					if len(self.checklist[i].discord_channels) == 0: self.checklist.pop(i)
+					break
+		elif False:
+			pass
+		else:
+			await self.bot.responses.failure(title="Not a YouTube/Twitch Channel", message="The URL you have given me is not a YouTube/Twitch channel!")
+			return
+
+		if found: await self.bot.responses.basic(message="This channel has been removed!")
+		else: await self.bot.responses.failure(title="Channel Never Watched", message="I was never watching this YouTube/Twitch channel in this Discord channel!")
+
+		self._save()
+
+	@commands.command(pass_context=True)
+	@checks.is_owner()
 	async def latest(self, ctx):
 		"""Obtains the latest videos and announces them for every channel.
 
