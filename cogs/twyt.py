@@ -8,27 +8,27 @@ __version__ = '0.0.1'
 
 import asyncio
 
+import discord
 from discord.ext import commands
 
 from discordbot.bot_utils import config, checks
 from discordbot.bot_utils.paginator import Pages
 
 import os
-import pickle
+import json
 
 from apiclient.discovery import build as build_yt
 from apiclient.errors import HttpError
 
 import opengraph
 
-SAVE_FILE = "./data/twyt.pickle"
+SAVE_FILE = "./data/twyt.json"
 
 SLEEP_MINUTES = 5
 
 class YouTubeItem:
-	def __init__(self, channel_id, youtube, discord_channel = None):
+	def __init__(self, youtube, channel_id, discord_channel = None):
 		self.channel_id = channel_id
-		self.playlist_id = '' #wait for youtube
 		self.latest = None
 		self.discord_channels = []
 
@@ -36,6 +36,16 @@ class YouTubeItem:
 			self.discord_channels.append(discord_channel)
 
 		self.youtube = youtube
+
+	@classmethod
+	def fromDict(cls, youtube, bot, data):
+		self = cls(youtube, data.get('channel_id'))
+		self.latest = data.get('latest')
+		self.discord_channels = [DiscordChannel.fromDict(bot, discord_channel) for discord_channel in data.get('discord_channels', [])]
+		return self
+
+	def toDict(self):
+		return dict(channel_id = self.channel_id, latest = self.latest, discord_channels = [c.toDict() for c in self.discord_channels])
 
 	def video_list(self):
 		channel = self.youtube.channels().list(
@@ -58,9 +68,13 @@ class YouTubeItem:
 
 		response = items[0]['snippet']
 		response['url'] = "https://youtu.be/" + response['resourceId']['videoId']
+		return response
+
+	async def check_latest_unseen(self):
 		latest = self.latest
 		self.latest = response['publishedAt']
-		if self.latest == latest or latest == None: return None
+		response = check_latest()
+		if (self.latest == latest or latest == None): return None
 		else: return response
 
 class DiscordChannel:
@@ -69,8 +83,15 @@ class DiscordChannel:
 		self.channel = channel
 		self.template = template
 
+	@classmethod
+	def fromDict(cls, bot, data):
+		return cls(bot, data.get('channel'), data.get('template'))
+
+	def toDict(self):
+		return dict(channel = self.channel, template = self.template)
+
 	async def send_message(self, data):
-		if data: await self.bot.send_message(self.channel, self.template % data)
+		if data: await self.bot.send_message(discord.Object(self.channel), self.template % data)
 
 class Twyt:
 	"""All YouTube and Twitch based commands."""
@@ -81,25 +102,24 @@ class Twyt:
 		self.youtube = build_yt("youtube", "v3", developerKey=self.bot.config.get('credentials', {}).get('youtube_developer_key'))
 
 		self.checklist = []
-		# self._load()
-		# self.checklist.append(YouTubeItem("UCme0nLOCBquY0OxIGvtnREQ", self.youtube))
-		# self._save()
+		self._load()
 
 	async def on_ready(self):
 		while True:
 			await asyncio.sleep(SLEEP_MINUTES*60)
 			for item in self.checklist:
-				latest = await item.check_latest()
+				latest = await item.check_latest_unseen()
 				for channel in item.discord_channels:
 					await channel.send_message(latest)
 
 	def _save(self):
-		pickle.dump(self.checklist, open(SAVE_FILE, 'wb'))
+		with open(SAVE_FILE, 'w') as save:
+			json.dump([c.toDict() for c in self.checklist], save)
 
 	def _load(self):
 		try:
-			data = pickle.load(open(SAVE_FILE, 'rb'))
-			if data: self.checklist = data
+			data = json.load(open(SAVE_FILE, 'r'))
+			if data: self.checklist = [YouTubeItem.fromDict(self.youtube, self.bot, d) for d in data]
 		except IOError:
 			pass
 
@@ -112,6 +132,7 @@ class Twyt:
 		XXX Does not have file saving working, so it's only in RAM right now.
 		XXX Doesn't allow you to change the Discord channel.
 		XXX Can only add, not remove."""
+
 		if not url:
 			await self.bot.responses.failure(title="No URL Specified", message="You need to give me a URL!")
 			return
@@ -119,26 +140,26 @@ class Twyt:
 		og = opengraph.OpenGraph(url=url)
 		channel_url = og.get('url', '')
 		if channel_url.startswith("https://www.youtube.com/channel/"):
-			self.checklist.append(YouTubeItem(channel_url.replace("https://www.youtube.com/channel/", ""), self.youtube, DiscordChannel(self.bot, ctx.message.channel, message + "  %(url)s")))
+			self.checklist.append(YouTubeItem(self.youtube, channel_url.replace("https://www.youtube.com/channel/", ""), DiscordChannel(self.bot, ctx.message.channel.id, message + "  %(url)s")))
 			await self.bot.responses.basic(message="This YouTube channel has been added!")
 		elif False:
 			pass
 		else:
-			await self.bot.responses.failure(title="Not a YouTube/Tiwtch Channel", message="The URL you have given me is not a YouTube/Twitch channel!")
+			await self.bot.responses.failure(title="Not a YouTube/Twitch Channel", message="The URL you have given me is not a YouTube/Twitch channel!")
 			return
 
-		# self._save()
+		self._save()
 
+	@commands.command(pass_context=True)
+	async def latest(self, ctx):
+		"""Obtains the latest videos and announces them for every channel.
 
-	# @commands.command(pass_context=True)
-	# async def latest(self, ctx):
-	# 	"""Obtains the latest DubstepHorror release."""
+		This does not just check the latest videos in this particular server.  It will force an announcement across all servers."""
 
-	# 	self.checklist[0].discord_channels.append(DiscordChannel(self.bot, ctx.message.channel))
-
-	# 	latest = await self.checklist[0].check_latest()
-	# 	for channel in self.checklist[0].discord_channels:
-	# 		await channel.send_message(latest)
+		for item in self.checklist:
+			latest = await item.check_latest()
+			for channel in item.discord_channels:
+				await channel.send_message(latest)
 		
 
 def setup(bot):
