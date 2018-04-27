@@ -105,7 +105,7 @@ class Twyt:
 
 	@commands.command(pass_context=True)
 	@checks.mod_or_permissions(manage_webhooks=True)
-	async def watch(self, ctx, url : str):
+	async def watch(self, ctx, url : str, message = "@everyone New upload!"):
 		"""Add a YouTube/Twitch channel to watch for new uploads.
 
 		XXX Only works with YouTube channels right now.
@@ -119,7 +119,7 @@ class Twyt:
 		og = opengraph.OpenGraph(url=url)
 		channel_url = og.get('url', '')
 		if channel_url.startswith("https://www.youtube.com/channel/"):
-			self.checklist.append(YouTubeItem(channel_url.replace("https://www.youtube.com/channel/", ""), self.youtube, DiscordChannel(self.bot, ctx.message.channel, "@everyone New upload!  %(url)s")))
+			self.checklist.append(YouTubeItem(channel_url.replace("https://www.youtube.com/channel/", ""), self.youtube, DiscordChannel(self.bot, ctx.message.channel, message + "  %(url)s")))
 			await self.bot.responses.basic(message="This YouTube channel has been added!")
 		elif False:
 			pass
