@@ -60,8 +60,8 @@ class YouTubeItem:
 		response['url'] = "https://youtu.be/" + response['resourceId']['videoId']
 		latest = self.latest
 		self.latest = response['publishedAt']
-		if self.latest != latest: return response
-		else: return None
+		if self.latest == latest or latest == None: return None
+		else: return response
 
 class DiscordChannel:
 	def __init__(self, bot, channel, template = "%(title)s by %(channelTitle)s just published!  %(url)s"):
