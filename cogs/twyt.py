@@ -71,9 +71,9 @@ class YouTubeItem:
 		return response
 
 	async def check_latest_unseen(self):
+		response = check_latest()
 		latest = self.latest
 		self.latest = response['publishedAt']
-		response = check_latest()
 		if (self.latest == latest or latest == None): return None
 		else: return response
 
