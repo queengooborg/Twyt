@@ -131,7 +131,9 @@ class Twyt:
 		"""Add a YouTube/Twitch channel to watch for new uploads.
 
 		XXX Only works with YouTube channels right now.
-		XXX Doesn't allow you to change the Discord channel."""
+		XXX Sort of works with livestreams on YouTube.  The bot announces new video uploads, and YouTube treats livestreams like videos.
+		XXX Doesn't allow you to change the Discord channel.
+		XXX IMPORTANT: Videos should be published in the order they were uploaded on this channel to prevent issues with notifications."""
 
 		if not url:
 			await self.bot.responses.failure(title="No URL Specified", message="You need to give me a URL!")
