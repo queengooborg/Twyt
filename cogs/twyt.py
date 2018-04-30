@@ -71,7 +71,7 @@ class YouTubeItem:
 		return response
 
 	async def check_latest_unseen(self):
-		response = self.check_latest()
+		response = await self.check_latest()
 		print("%s: Livestream?  %s" %(response['url'],response['liveBroadcastContent']))
 		if response['liveBroadcastContent'] != "none": pass
 		latest = self.latest
