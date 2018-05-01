@@ -65,6 +65,7 @@ class YouTubeItem:
 		loop = asyncio.get_event_loop()
 		items = await loop.run_in_executor(None, self.video_list)
 		if not len(items): return None
+		items.sort(key=lambda v: v['snippet']['publishedAt'], reverse=True)
 
 		response = items[0]['snippet']
 		response['url'] = "https://youtu.be/" + response['resourceId']['videoId']
@@ -133,8 +134,7 @@ class Twyt:
 
 		XXX Only works with YouTube channels right now.
 		XXX Sort of works with livestreams on YouTube.  The bot announces new video uploads, and YouTube treats livestreams like videos.
-		XXX Doesn't allow you to change the Discord channel.
-		XXX IMPORTANT: Videos should be published in the order they were uploaded on this channel to prevent issues with notifications."""
+		XXX Doesn't allow you to change the Discord channel."""
 
 		if not url:
 			await self.bot.responses.failure(title="No URL Specified", message="You need to give me a URL!")
