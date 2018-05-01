@@ -113,6 +113,7 @@ class Twyt:
 				latest = await item.check_latest_unseen()
 				for channel in item.discord_channels:
 					await channel.send_message(latest)
+			self._save()
 
 	def _save(self):
 		with open(SAVE_FILE, 'w') as save:
