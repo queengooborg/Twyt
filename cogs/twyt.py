@@ -4,7 +4,7 @@ __title__ = 'twyt.cog'
 __author__ = 'Vinyl Darkscratch'
 __license__ = 'GNU GPLv3'
 __copyright__ = 'Copyright 2018 Vinyl Darkscratch www.queengoob.org'
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 import asyncio
 
