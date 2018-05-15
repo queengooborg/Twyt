@@ -129,7 +129,7 @@ class Twyt:
 
 	@commands.command(pass_context=True)
 	@checks.mod_or_permissions(manage_webhooks=True)
-	async def watch(self, ctx, url : str, message = "@everyone New upload!"):
+	async def watch(self, ctx, url : str, message = "%(title)s by %(channelTitle)s just published!"):
 		"""Add a YouTube/Twitch channel to watch for new uploads.
 
 		XXX Only works with YouTube channels right now.
