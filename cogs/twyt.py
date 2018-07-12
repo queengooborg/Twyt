@@ -94,7 +94,11 @@ class DiscordChannel:
 		return dict(channel = self.channel, template = self.template)
 
 	async def send_message(self, data):
-		if data: await self.bot.send_message(discord.Object(self.channel), self.template % data)
+		if data:
+			try:
+				await self.bot.send_message(discord.Object(self.channel), self.template % data)
+			except discord.errors.NotFound:
+				pass # XXX Should remove the watch for the Twitch/YouTube channel if Discord channel not found
 
 class Twyt:
 	"""All YouTube and Twitch based commands."""
